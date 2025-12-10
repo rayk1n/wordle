@@ -20,21 +20,29 @@ def evaluate_guess(guess, word):
             str += "\033[0m" + guess[i]     # if is not in word - don't color the letter 
     return str + "\033[0m"
 
-def wordle(guesses, answers):
-    print("")
-
 def main():
     answers = load_dictionary("answers.txt")
     guesses = load_dictionary("guesses.txt")
 
+    print("Welcome to the Wordle! \nYou have 6 attempts to guess the 5-letter word.")
     answer = random.choice(answers)
 
-    for i in range(6):
-        guess = input("Type your guess: ")
-        if is_valid_guess(guess, guesses):
-            print(evaluate_guess(guess, answer))
-        else:
-            print("Not valid format")
+    attempts = 1
+
+    while attempts <= 6:
+        guess = input("Type your guess: ").lower()
+        if not is_valid_guess(guess, guesses):
+            print("Not valid format or word.")
+            continue
+        if guess == answer:
+            print("Congratulations! You guessed the word in " + str(attempts) + " attempt(s)") 
+            break
+            
+        print(str(attempts) + ") " + evaluate_guess(guess, answer))
+        attempts+=1
+    
+    if attempts > 6:
+        print("You lost. The secret word was: " + str(answer))
 
 if __name__ == "__main__":
     main()
